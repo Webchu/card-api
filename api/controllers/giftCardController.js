@@ -1,0 +1,151 @@
+'use strict'
+
+var _ = require('lodash');
+var repository = require('../repositories/giftCardRepository');
+var transactionRepository = require('../repositories/transactionRepository');
+
+exports.list = function(request, response) {
+	try {
+		repository.GetAll(function(cards) {
+			response.json(cards);
+		});
+	} catch (err) {
+		response.json({
+			err: err
+		});
+	}
+};
+
+exports.create = function(request, response) {
+	try {
+		request.checkBody("card_id", "Preencha o card_id").notEmpty();
+		request.checkBody("balance", "Preencha o balance").notEmpty();
+
+		var errors = request.validationErrors();
+
+		if (errors) {
+			response.status(400);
+			response.send(errors);
+			return;
+		} else {
+			var cardToCreate = request.body;
+			repository.Create(cardToCreate);
+			response.send('Cartão criado');
+		}
+
+		return;
+	} catch (err) {
+		response.status(500);
+		response.send("Não foi possível criar o cartão");
+	}
+};
+
+exports.find = function(request, response) {
+	try {
+		request.assert('cardId', 'Preencha o cardId na queryString').notEmpty();
+		var errors = request.validationErrors();
+
+		if (errors) {
+			response.status(400);
+			response.send(errors);
+			return;
+		} else {
+			var cardId = request.query.cardId;
+
+			repository.Find(cardId, "", function(card) {
+				if (!card) {
+					response.send("Cartão não encontrado");
+					return;
+				}
+
+				response.json(card);
+			});
+		}
+	} catch (err) {
+		response.status(500);
+		response.send("Não foi possível encontrar o cartão");
+	}
+};
+
+exports.balance = function(request, response) {
+	try {
+
+		var cardId = request.body.card_id;
+		var email = request.body.email;
+		
+		repository.Find(cardId, email, function(card) {
+			if (card == null) {
+				response.status(400);
+				response.send("Cartão não encontrado");
+			}
+
+			console.log(card);
+
+			response.json(card);
+		});
+
+	} catch (err) {
+		response.status(500);
+		response.send("Não foi possível encontrar o cartão");
+	}
+};
+
+exports.capture = function(request, response) {
+	try {
+		var orderNumber = request.body.order_number;
+		var cards = request.body.cards;
+		var arrayCards = new Array();
+		var pendingAmount = request.body.amount;
+		
+		var retorno;
+		var mensagem;
+		for (var i = 0; i < cards.length; i++) {
+			var c = cards[i];
+			var cont = 0;
+			repository.Find(c.card_id, c.email, function(card) {
+
+				console.log(card);
+				if (retorno) return false;
+
+				if (!card) {
+					response.status(400);
+					response.send("Cartão " + c.card_id + "não encontrado");
+					retorno = true;
+				} else if (!card.is_valid) {
+					response.status(400);
+					response.send("Cartão " + c.card_id + " inválido");
+					retorno = true;
+				} else {
+					card.is_valid = false;
+					card.balance = 0;
+					repository.Update(card);
+
+          console.log("Updated card: " + card)
+
+					//criar transaction referente a esta captura
+					transactionRepository.Create(card.card_id, "giftcard", orderNumber, 0, function(transactionId) {
+						cont++;
+						var responseCard = {
+							'transaction_id': transactionId,
+							'card_id': card.card_id,
+							'is_valid': true,
+							'balance': 0,
+							'message': card.message
+						};
+
+						arrayCards.push(responseCard);
+
+						if (cont == cards.length) {
+							response.json(arrayCards);
+						}
+
+					});
+				}
+
+			});
+		}
+	} catch (err) {
+		response.status(500);
+		response.send("Não foi possível capturar. Erro: " + err);
+	}
+};
