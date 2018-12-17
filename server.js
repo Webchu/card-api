@@ -12,7 +12,7 @@ var express = require('express'),
 var routes = require('./api/routes/CardRoutes');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://jbarcela:Jonathan!1@ds111336.mlab.com:11336/heroku_c1t9lvvm');
+mongoose.connect('mongodb://coregiftcard:Tralala*0@ds131763.mlab.com:31763/coregiftcard');
 //mongoose.connect('mongodb://localhost/zeloapi')
 
 app.use(express.static(__dirname + '/public'));

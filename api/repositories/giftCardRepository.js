@@ -57,11 +57,20 @@ function Create(card) {
 	});
 }
 
-function Update(card) {
+function Update(card, fnCallback) {
 	if (!card) {
 		console.log('Cartão vazio');
 		return;
 	}
+
+	var fnInnerCallback = function(err, card) {
+		if (err) {
+			console.log('erro ao atualizar cartão - ' + err);
+			console.log(err);
+		}
+	}
+
+	if(fnCallback && typeof(fnCallback) == "function") fnInnerCallback = fnCallback;
 
 	card = card.toObject();
 	delete card._id;
@@ -71,10 +80,5 @@ function Update(card) {
 		$set: card
 	}, {
 		new: true
-	}, function(err, card) {
-		if (err) {
-			console.log('erro ao atualizar cartão - ' + err);
-			console.log(err);
-		}
-	});
+	}, fnInnerCallback);
 }

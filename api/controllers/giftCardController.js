@@ -95,7 +95,7 @@ exports.capture = function(request, response) {
 		var orderNumber = request.body.order_number;
 		var cards = request.body.cards;
 		var arrayCards = new Array();
-		var pendingAmount = request.body.amount;
+		var pendingAmount = request.body.order_pending_amount;
 		
 		var retorno;
 		var mensagem;
@@ -109,36 +109,53 @@ exports.capture = function(request, response) {
 
 				if (!card) {
 					response.status(400);
-					response.send("Cartão " + c.card_id + "não encontrado");
+					response.send(`Cartão ${c.card_id} não encontrado`);
 					retorno = true;
 				} else if (!card.is_valid) {
 					response.status(400);
-					response.send("Cartão " + c.card_id + " inválido");
+					response.send(`Cartão ${c.card_id} inválido`);
+					retorno = true;
+				} else if (pendingAmount == undefined) {
+					response.status(400);
+					response.send("Parâmetro order_pending_amount é obrigatório");
+					retorno = true;
+				} else if (pendingAmount <= 0) {
+					response.status(400);
+					response.send("Parâmetro order_pending_amount deve conter valor maior que 0");
+					retorno = true;
+				} else if ((card.balance - pendingAmount) < 0) {
+					response.status(400);
+					response.send(`Cartão ${c.card_id} com saldo insuficiente`);
 					retorno = true;
 				} else {
-					card.is_valid = false;
-					card.balance = 0;
-					repository.Update(card);
+					card.balance = card.balance - pendingAmount;
+					card.is_valid = !!card.balance;
+					repository.Update(card, function(err, card){
+						if (err) {
+							console.log('erro ao atualizar cartão - ' + err);
+							console.log(err);
+						} else {
+							console.log("Updated card: " + card)
 
-          console.log("Updated card: " + card)
-
-					//criar transaction referente a esta captura
-					transactionRepository.Create(card.card_id, "giftcard", orderNumber, 0, function(transactionId) {
-						cont++;
-						var responseCard = {
-							'transaction_id': transactionId,
-							'card_id': card.card_id,
-							'is_valid': true,
-							'balance': 0,
-							'message': card.message
-						};
-
-						arrayCards.push(responseCard);
-
-						if (cont == cards.length) {
-							response.json(arrayCards);
+							//criar transaction referente a esta captura
+							transactionRepository.Create(card.card_id, "giftcard", orderNumber, 0, function(transactionId) {
+								cont++;
+								var responseCard = {
+									'transaction_id': transactionId,
+									'card_id': card.card_id,
+									'is_valid': true,
+									'balance': card.balance,
+									'message': card.message
+								};
+		
+								arrayCards.push(responseCard);
+		
+								if (cont == cards.length) {
+									response.json(arrayCards);
+								}
+		
+							});
 						}
-
 					});
 				}
 
