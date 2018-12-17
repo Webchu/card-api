@@ -13,7 +13,7 @@ var routes = require('./api/routes/CardRoutes');
 
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://coregiftcard:Tralala*0@ds131763.mlab.com:31763/coregiftcard');
-//mongoose.connect('mongodb://localhost/zeloapi')
+//mongoose.connect('mongodb://localhost/coregiftcard')
 
 app.use(express.static(__dirname + '/public'));
 
@@ -42,4 +42,4 @@ routes(app);
 
 app.listen(port);
 
-console.log('Zelo Mock API started on: ' + port);
+console.log('Coregiftcard Mock API started on: ' + port);

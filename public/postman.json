@@ -1,6 +1,6 @@
 {
 	"id": "ef58e27d-b434-4bb7-dc57-635524d1a583",
-	"name": "Zelo-api",
+	"name": "Coregiftcard-api",
 	"description": "",
 	"order": [
 		"4765f49d-2d7a-2f6e-f468-7c46dc802954",
@@ -30,7 +30,7 @@
 					"enabled": true
 				}
 			],
-			"url": "https://zeloapi.herokuapp.com/loyaltycard/balance",
+			"url": "https://coregiftcard.herokuapp.com/loyaltycard/balance",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -59,7 +59,7 @@
 					"enabled": true
 				}
 			],
-			"url": "http://zeloapi.herokuapp.com/giftcard/balance",
+			"url": "http://coregiftcard.herokuapp.com/giftcard/balance",
 			"queryParams": [],
 			"pathVariables": {},
 			"pathVariableData": [],
@@ -90,7 +90,7 @@
 					"enabled": true
 				}
 			],
-			"url": "https://zeloapi.herokuapp.com/loyaltycard/capture",
+			"url": "https://coregiftcard.herokuapp.com/loyaltycard/capture",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -112,7 +112,7 @@
 			"id": "4765f49d-2d7a-2f6e-f468-7c46dc802954",
 			"headers": "",
 			"headerData": [],
-			"url": "https://zeloapi.herokuapp.com/giftcard",
+			"url": "https://coregiftcard.herokuapp.com/giftcard",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -140,7 +140,7 @@
 					"enabled": true
 				}
 			],
-			"url": "https://zeloapi.herokuapp.com/loyaltycard/create",
+			"url": "https://coregiftcard.herokuapp.com/loyaltycard/create",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -162,7 +162,7 @@
 			"id": "754be04b-6eb8-1ee5-a0e5-a0b46543c577",
 			"headers": "",
 			"headerData": [],
-			"url": "https://zeloapi.herokuapp.com/transaction",
+			"url": "https://coregiftcard.herokuapp.com/transaction",
 			"queryParams": [],
 			"pathVariables": {},
 			"pathVariableData": [],
@@ -192,7 +192,7 @@
 					"enabled": true
 				}
 			],
-			"url": "https://zeloapi.herokuapp.com/giftcard/capture",
+			"url": "https://coregiftcard.herokuapp.com/giftcard/capture",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -214,7 +214,7 @@
 			"id": "a36b637a-bb9b-045b-8b7d-f2ffcda3734b",
 			"headers": "",
 			"headerData": [],
-			"url": "https://zeloapi.herokuapp.com/loyaltycard",
+			"url": "https://coregiftcard.herokuapp.com/loyaltycard",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
@@ -242,7 +242,7 @@
 					"enabled": true
 				}
 			],
-			"url": "https://zeloapi.herokuapp.com/giftcard/create",
+			"url": "https://coregiftcard.herokuapp.com/giftcard/create",
 			"queryParams": [],
 			"preRequestScript": null,
 			"pathVariables": {},
